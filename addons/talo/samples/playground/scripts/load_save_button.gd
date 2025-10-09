@@ -8,7 +8,7 @@ func _on_pressed() -> void:
 		saves = await Talo.saves.get_saves()
 
 		if saves.is_empty():
-			push_warning("No saves to load")
+			print("No saves to load")
 			%ResponseLabel.text = "No saves to load"
 			return
 

@@ -1,23 +1,21 @@
 extends Node2D
 
-var entry_scene = preload("res://addons/talo/samples/leaderboards/entry.tscn")
+export var leaderboard_internal_name =  ""
+export var include_archived: bool
 
-@export var leaderboard_internal_name: String = ""
-@export var include_archived: bool
-
-@onready var leaderboard_name: Label = %LeaderboardName
-@onready var entries_container: VBoxContainer = %Entries
-@onready var info_label: Label = %InfoLabel
-@onready var username: TextEdit = %Username
-@onready var filter_button: Button = %Filter
+onready var leaderboard_name: Label
+onready var entries_container: VBoxContainer
+onready var info_label: Label
+onready var username: TextEdit
+onready var filter_button: Button
 
 var _entries_error: bool
-var _filter: String = "All"
+var _filter =  "All"
 var _filter_idx: int
 
 func _ready() -> void:
 	leaderboard_name.text = leaderboard_name.text.replace("{leaderboard}", leaderboard_internal_name)
-	await _load_entries()
+	#await _load_entries()
 	_set_entry_count()
 
 func _set_entry_count():
@@ -28,40 +26,33 @@ func _set_entry_count():
 		if _filter != "All":
 			info_label.text += " (%s team)" % _filter
 
-func _create_entry(entry: TaloLeaderboardEntry) -> void:
-	var entry_instance = entry_scene.instantiate()
-	entry_instance.set_data(entry)
-	entries_container.add_child(entry_instance)
+func _create_entry(entry) -> void:
+	pass
 
 func _build_entries() -> void:
 	for child in entries_container.get_children():
 		child.queue_free()
 
-	var entries = Talo.leaderboards.get_cached_entries(leaderboard_internal_name)
-	if _filter != "All":
-		entries = entries.filter(func (entry: TaloLeaderboardEntry): return entry.get_prop("team", "") == _filter)
-
-	for entry in entries:
-		entry.position = entries.find(entry)
-		_create_entry(entry)
+	#for entry in entries:
+	#	entry.position = entries.find(entry)
 
 func _load_entries() -> void:
 	var page := 0
 	var done := false
 
 	while !done:
-		var options := Talo.leaderboards.GetEntriesOptions.new()
-		options.page = page
-		options.include_archived = include_archived
+		#var options := Talo.leaderboards.GetEntriesOptions.new()
+		#options.page = page
+		#options.include_archived = include_archived
 
-		var res := await Talo.leaderboards.get_entries(leaderboard_internal_name, options)
-
+		#var res := await Talo.leaderboards.get_entries(leaderboard_internal_name, options)
+		var res = null
 		if not is_instance_valid(res):
 			_entries_error = true
 			return
 
-		var entries := res.entries
-		var is_last_page := res.is_last_page
+		var entries = res.entries
+		var is_last_page = res.is_last_page
 
 		if is_last_page:
 			done = true
@@ -71,11 +62,12 @@ func _load_entries() -> void:
 	_build_entries()
 
 func _on_submit_pressed() -> void:
-	await Talo.players.identify("username", username.text)
+	#await Talo.players.identify("username", username.text)
 	var score := RandomNumberGenerator.new().randi_range(0, 100)
 	var team := "Blue" if RandomNumberGenerator.new().randi_range(0, 1) == 0 else "Red"
 
-	var res := await Talo.leaderboards.add_entry(leaderboard_internal_name, score, {team = team})
+	#var res := await Talo.leaderboards.add_entry(leaderboard_internal_name, score, {team = team})
+	var res = null
 	assert(is_instance_valid(res))
 	info_label.text = "You scored %s points for the %s team!%s" % [score, team, " Your highscore was updated!" if res.updated else ""]
 

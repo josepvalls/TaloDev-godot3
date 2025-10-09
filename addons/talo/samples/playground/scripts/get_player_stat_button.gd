@@ -1,6 +1,6 @@
 extends Button
 
-@export var stat_name: String
+export var stat_name: String
 
 func _on_pressed() -> void:
 	if stat_name.is_empty():

@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends KinematicBody2D
 
 const _username_file_path = "res://talo_save_username.txt"
 

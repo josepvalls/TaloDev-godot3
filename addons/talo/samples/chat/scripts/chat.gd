@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var player_username := ""
+export var player_username := ""
 
 var _active_channel_id := -1
 var _subscriptions: Array[TaloChannel] = []

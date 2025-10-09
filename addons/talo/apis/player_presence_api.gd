@@ -7,38 +7,38 @@ class_name PlayerPresenceAPI extends TaloAPI
 ## @tutorial: https://docs.trytalo.com/docs/godot/player-presence
 
 ## Emitted when a player's presence status changes.
-signal presence_changed(presence: TaloPlayerPresence, online_changed: bool, custom_status_changed: bool)
+signal presence_changed(presence, online_changed, custom_status_changed)
 
 func _ready():
-	await Talo.init_completed
-	Talo.socket.message_received.connect(_on_message_received)
+	#await Talo.init_completed
+	Talo.socket.connect("message_received", self, "_on_message_received")
 
 func _on_message_received(res: String, data: Dictionary) -> void:
 	if res == "v1.players.presence.updated":
-		presence_changed.emit(TaloPlayerPresence.new(data.presence), data.meta.onlineChanged, data.meta.customStatusChanged)
+		emit_signal("presence_changed", TaloPlayerPresence.new(data.presence), data.meta.onlineChanged, data.meta.customStatusChanged)
 
 ## Get the presence status for a specific player.
-func get_presence(player_id: String) -> TaloPlayerPresence:
-	var res := await client.make_request(HTTPClient.METHOD_GET, "/%s" % player_id)
+func get_presence(player_id: String):
+	client.make_request(HTTPClient.METHOD_GET, "/%s" % player_id, {}, [],false,null)
 
-	match res.status:
-		200:
-			return TaloPlayerPresence.new(res.body.presence)
-		_:
-			return null
+	#match res.status:
+	#	200:
+#			return TaloPlayerPresence.new(res.body.presence)
+#		_:
+#			return null
 
 ## Update the presence status for the current player.
-func update_presence(online: bool, custom_status: String = "") -> TaloPlayerPresence:
+func update_presence(online: bool, custom_status =  ""):
 	if Talo.identity_check() != OK:
 		return null
 
-	var res := await client.make_request(HTTPClient.METHOD_PUT, "", {
+	client.make_request(HTTPClient.METHOD_PUT, "", {
 		online = online,
 		customStatus = custom_status
-	})
+	}, [], false, null)
 
-	match res.status:
-		200:
-			return TaloPlayerPresence.new(res.body.presence)
-		_:
-			return null
+	#match res.status:
+		#200:
+			#return TaloPlayerPresence.new(res.body.presence)
+		#_:
+		#	return null

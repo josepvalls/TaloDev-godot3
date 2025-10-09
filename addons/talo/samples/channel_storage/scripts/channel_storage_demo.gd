@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var prop_key: String
+export var prop_key: String
 
 @onready var prop_key_line_edit: LineEdit = %PropKey
 @onready var prop_value_line_edit: LineEdit = %PropValue

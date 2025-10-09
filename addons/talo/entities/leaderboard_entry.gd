@@ -8,21 +8,20 @@ enum LeaderboardSortMode {
 var id: int
 var position: int
 var score: float
-var player_alias: TaloPlayerAlias
+var player_alias
 var leaderboard_name: String
 var leaderboard_internal_name: String
-var leaderboard_sort_mode: LeaderboardSortMode
+var leaderboard_sort_mode: int
 var created_at: String
 var updated_at: String
 var deleted_at: String
 
-func _init(data: Dictionary):
-	super._init(data.props.map(func (prop): return TaloProp.new(prop.key, prop.value)))
+func __init(data):
+	#super._init(data)
 
 	id = data.id
 	position = data.position
 	score = data.score
-	player_alias = TaloPlayerAlias.new(data.playerAlias)
 
 	leaderboard_name = data.leaderboardName
 	leaderboard_internal_name = data.leaderboardInternalName

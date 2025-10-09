@@ -16,16 +16,17 @@ func _init() -> void:
 	name = "TaloSocket"
 
 ## Emitted when a message is received from the Talo Socket server. Not recommended for direct use. See the Talo docs for a list of responses and message structures.
-signal message_received(res: String, message: Dictionary)
+signal message_received(res, message)
 
 ## Emitted when the connection to the Talo Socket server is closed. The code and reason are provided.
-signal connection_closed(code: int, reason: String)
+signal connection_closed(code, reason)
 
 ## Emitted when an error is received from the Talo Socket server.
-signal error_received(err: TaloSocketError)
+signal error_received(err)
 
 func _ready() -> void:
-	message_received.connect(_on_message_received)
+	#message_received.connect(_on_message_received)
+	pass
 
 func _identify_player() -> void:
 	if not _socket_authenticated:
@@ -43,31 +44,33 @@ func _identify_player() -> void:
 	send("v1.players.identify", payload)
 
 func _get_socket_url(ticket: String) -> String:
-	var url := Talo.settings.socket_url
+	var url = Talo.settings.socket_url
 	return "%s/?ticket=%s" % [url, ticket]
 
 ## Open the connection to the Talo Socket server. A new ticket is created to authenticate the connection.
 func open_connection():
-	var ticket := await Talo.socket_tickets.create_ticket()
+	Talo.socket_tickets.create_ticket(funcref(self, "open_connection_callback"))
 
-	var err := _socket.connect_to_url(_get_socket_url(ticket))
+func open_connection_callback(ticket):
+	return
+	var err = _socket.connect_to_url(_get_socket_url(ticket))
 	if err != OK:
-		print_rich("[color=yellow]Warning: Failed connecting to the Talo Socket: %s[/color]" % err)
+		prints("[color=yellow]Warning: Failed connecting to the Talo Socket: %s[/color]" % err)
 
 func _on_message_received(res: String, data: Dictionary) -> void:
 	if Talo.settings.log_responses:
-		print_rich("[color=aqua]--> WSS %s %s[/color]" % [res, data])
+		prints("[color=aqua]--> WSS %s %s[/color]" % [res, data])
 
 	match res:
 		"v1.connected":
 			_socket_authenticated = true
-			if not _identified and not _temp_socket_token.is_empty():
+			if not _identified and not _temp_socket_token.empty():
 				_identify_player()
 		"v1.players.identify.success":
 			_identified = true
 			_temp_socket_token = ""
 		"v1.error":
-			error_received.emit(TaloSocketError.new(data))
+			emit_signal("error_received", TaloSocketError.new(data))
 
 ## A socket token is created for a player alias each time they are identified. This must be sent in order to validate the current socket session.
 func set_socket_token(token: String) -> void:
@@ -78,7 +81,7 @@ func set_socket_token(token: String) -> void:
 ## Send a message to the Talo Socket server. Not recommended for direct use. See the Talo docs for available requests and message structures.
 func send(req: String, data: Dictionary = {}) -> int:
 	if Talo.settings.log_requests:
-		print_rich("[color=orange]<-- WSS %s %s[/color]" % [req, data])
+		prints("[color=orange]<-- WSS %s %s[/color]" % [req, data])
 
 	return _socket.send_text(JSON.stringify({
 		req = req,
@@ -90,15 +93,15 @@ func _get_json() -> String:
 	return pkt.get_string_from_utf8()
 
 func _emit_message(message: String) -> void:
-	var json := JSON.new()
+	var json = JSON.new()
 	json.parse(message)
 
 	var res = json.data.res
 	var data = json.data.data
-	message_received.emit(res, data)
+	emit_signal("message_received", res, data)
 
 ## Close the connection to the Talo Socket server.
-func close_connection(code: int = 1000, reason: String = "") -> void:
+func close_connection(code =  1000, reason =  "") -> void:
 	_socket.close(code, reason)
 
 ## Close the current connection and create a new connection to the Talo Socket server.
@@ -108,7 +111,7 @@ func reset_connection() -> void:
 	open_connection()
 
 func _reset_socket() -> void:
-	connection_closed.emit(_socket.get_close_code(), _socket.get_close_reason())
+	emit_signal("connection_closed", _socket.get_close_code(), _socket.get_close_reason())
 	_socket = WebSocketPeer.new()
 	_socket_authenticated = false
 	_identified = false
@@ -124,4 +127,5 @@ func _poll() -> void:
 		_emit_message(message)
 
 func _process(_delta: float) -> void:
-	_poll()
+	pass
+	#_poll()

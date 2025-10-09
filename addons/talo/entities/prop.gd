@@ -1,9 +1,9 @@
-class_name TaloProp extends RefCounted
+class_name TaloProp extends Reference
 
 var key: String
-var value: Variant
+var value
 
-func _init(key: String, value: Variant):
+func _init(key: String, value):
 	self.key = key
 	self.value = str(value) if value != null else value
 

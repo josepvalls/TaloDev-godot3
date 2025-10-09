@@ -6,7 +6,7 @@ class_name TaloLoadable extends Node
 ## @tutorial: https://docs.trytalo.com/docs/godot/saves
 
 ## The unique identifier for this loadable.
-@export var id: String
+export var id: String
 
 var _saved_fields: Dictionary[String, Variant]
 

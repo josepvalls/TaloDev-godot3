@@ -1,6 +1,6 @@
 extends Button
 
-@export var leaderboard_name: String
+export var leaderboard_name: String
 
 func _on_pressed() -> void:
 	if leaderboard_name.is_empty():

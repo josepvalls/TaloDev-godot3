@@ -1,7 +1,7 @@
 extends Button
 
-@export var prop_name: String
-@export var prop_value: String
+export var prop_name: String
+export var prop_value: String
 
 func _on_pressed() -> void:
 	if Talo.identity_check() != OK:

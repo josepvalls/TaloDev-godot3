@@ -1,4 +1,4 @@
-class_name TaloSessionManager extends RefCounted
+class_name TaloSessionManager extends Reference
 
 var _verification_alias_id: int
 
@@ -40,10 +40,9 @@ func get_verification_alias_id() -> int:
 	return _verification_alias_id
 
 func handle_session_created(alias: Dictionary, session_token: String, socket_token: String) -> void:
-	Talo.current_alias = TaloPlayerAlias.new(alias)
-	Talo.players.identified.emit(Talo.current_player)
+	Talo.players.emit_signal("identified", Talo.current_player)
 	_save_session(session_token)
 	Talo.socket.set_socket_token(socket_token)
 
 func check_for_session() -> bool:
-	return not get_token().is_empty()
+	return not get_token().empty()

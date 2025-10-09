@@ -6,12 +6,16 @@ class_name SocketTicketsAPI extends TaloAPI
 ## @tutorial: https://docs.trytalo.com/docs/godot/socket
 
 ## Create a new socket ticket.
-func create_ticket() -> String:
-	var res := await client.make_request(HTTPClient.METHOD_POST, "")
+func create_ticket(custom_callback):
+	var callback = funcref(self, "create_ticket_callback")
+	if custom_callback:
+		callback = custom_callback
+	client.make_request(HTTPClient.METHOD_POST, "", {}, [], false, [callback])
 
+func create_ticket_callback(res):
 	match res.status:
 		200:
 			return res.body.ticket
 		_:
-			push_error("Failed to get socket ticket")
+			printerr("Failed to get socket ticket")
 			return ""

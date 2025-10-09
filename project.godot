@@ -6,14 +6,192 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=5
+config_version=4
+
+_global_script_classes=[ {
+"base": "TaloAPI",
+"class": "EventsAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/events_api.gd"
+}, {
+"base": "TaloAPI",
+"class": "HealthCheckAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/health_check_api.gd"
+}, {
+"base": "TaloAPI",
+"class": "LeaderboardsAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/leaderboards_api.gd"
+}, {
+"base": "TaloLoadable",
+"class": "LoadableButton",
+"language": "GDScript",
+"path": "res://addons/talo/samples/persistent_buttons/loadable_button.gd"
+}, {
+"base": "TaloLoadable",
+"class": "LoadableColorRect",
+"language": "GDScript",
+"path": "res://addons/talo/samples/playground/scripts/loadable_color_rect.gd"
+}, {
+"base": "TaloAPI",
+"class": "PlayerAuthAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/player_auth_api.gd"
+}, {
+"base": "TaloAPI",
+"class": "PlayerPresenceAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/player_presence_api.gd"
+}, {
+"base": "TaloAPI",
+"class": "PlayersAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/players_api.gd"
+}, {
+"base": "TaloAPI",
+"class": "SocketTicketsAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/socket_tickets_api.gd"
+}, {
+"base": "Node",
+"class": "TaloAPI",
+"language": "GDScript",
+"path": "res://addons/talo/apis/api.gd"
+}, {
+"base": "Reference",
+"class": "TaloAuthError",
+"language": "GDScript",
+"path": "res://addons/talo/utils/talo_auth_error.gd"
+}, {
+"base": "RefCounted",
+"class": "TaloChannelStorageManager",
+"language": "GDScript",
+"path": "res://addons/talo/utils/channel_storage_manager.gd"
+}, {
+"base": "RefCounted",
+"class": "TaloChannelStoragePropError",
+"language": "GDScript",
+"path": "res://addons/talo/utils/channel_storage_prop_error.gd"
+}, {
+"base": "Node",
+"class": "TaloClient",
+"language": "GDScript",
+"path": "res://addons/talo/talo_client.gd"
+}, {
+"base": "Object",
+"class": "TaloEntityWithProps",
+"language": "GDScript",
+"path": "res://addons/talo/entities/entity_with_props.gd"
+}, {
+"base": "EditorExportPlugin",
+"class": "TaloExportPlugin",
+"language": "GDScript",
+"path": "res://addons/talo/talo_export.gd"
+}, {
+"base": "RefCounted",
+"class": "TaloLeaderboardEntriesManager",
+"language": "GDScript",
+"path": "res://addons/talo/utils/leaderboard_entries_manager.gd"
+}, {
+"base": "TaloEntityWithProps",
+"class": "TaloLeaderboardEntry",
+"language": "GDScript",
+"path": "res://addons/talo/entities/leaderboard_entry.gd"
+}, {
+"base": "Node",
+"class": "TaloLoadable",
+"language": "GDScript",
+"path": "res://addons/talo/entities/loadable.gd"
+}, {
+"base": "Reference",
+"class": "TaloPlayer",
+"language": "GDScript",
+"path": "res://addons/talo/entities/player.gd"
+}, {
+"base": "Object",
+"class": "TaloPlayerPresence",
+"language": "GDScript",
+"path": "res://addons/talo/entities/player_presence.gd"
+}, {
+"base": "Reference",
+"class": "TaloProp",
+"language": "GDScript",
+"path": "res://addons/talo/entities/prop.gd"
+}, {
+"base": "Reference",
+"class": "TaloPropUtils",
+"language": "GDScript",
+"path": "res://addons/talo/utils/prop_utils.gd"
+}, {
+"base": "RefCounted",
+"class": "TaloSavesManager",
+"language": "GDScript",
+"path": "res://addons/talo/utils/saves_manager.gd"
+}, {
+"base": "Reference",
+"class": "TaloSessionManager",
+"language": "GDScript",
+"path": "res://addons/talo/utils/session_manager.gd"
+}, {
+"base": "Reference",
+"class": "TaloSettings",
+"language": "GDScript",
+"path": "res://addons/talo/talo_settings.gd"
+}, {
+"base": "Node",
+"class": "TaloSocket",
+"language": "GDScript",
+"path": "res://addons/talo/talo_socket.gd"
+}, {
+"base": "Reference",
+"class": "TaloSocketError",
+"language": "GDScript",
+"path": "res://addons/talo/utils/talo_socket_error.gd"
+}, {
+"base": "Reference",
+"class": "TaloTimeUtils",
+"language": "GDScript",
+"path": "res://addons/talo/utils/time_utils.gd"
+} ]
+_global_script_class_icons={
+"EventsAPI": "",
+"HealthCheckAPI": "",
+"LeaderboardsAPI": "",
+"LoadableButton": "",
+"LoadableColorRect": "",
+"PlayerAuthAPI": "",
+"PlayerPresenceAPI": "",
+"PlayersAPI": "",
+"SocketTicketsAPI": "",
+"TaloAPI": "",
+"TaloAuthError": "",
+"TaloChannelStorageManager": "",
+"TaloChannelStoragePropError": "",
+"TaloClient": "",
+"TaloEntityWithProps": "",
+"TaloExportPlugin": "",
+"TaloLeaderboardEntriesManager": "",
+"TaloLeaderboardEntry": "",
+"TaloLoadable": "",
+"TaloPlayer": "",
+"TaloPlayerPresence": "",
+"TaloProp": "",
+"TaloPropUtils": "",
+"TaloSavesManager": "",
+"TaloSessionManager": "",
+"TaloSettings": "",
+"TaloSocket": "",
+"TaloSocketError": "",
+"TaloTimeUtils": ""
+}
 
 [application]
 
 config/name="Talo"
-run/main_scene="res://addons/talo/samples/playground/playground.tscn"
-config/features=PackedStringArray("4.4", "Forward Plus")
+run/main_scene="res://addons/talo/samples/leaderboards/leaderboard.tscn"
 config/icon="res://icon.png"
+config/features=PoolStringArray( "4.4", "Forward Plus" )
 
 [autoload]
 
@@ -24,48 +202,48 @@ Talo="*res://addons/talo/talo_manager.gd"
 gdscript/warnings/unassigned_variable=2
 gdscript/warnings/unassigned_variable_op_assign=2
 gdscript/warnings/unused_variable=2
-gdscript/warnings/unused_local_constant=2
-gdscript/warnings/unused_private_class_variable=2
-gdscript/warnings/unused_parameter=2
-gdscript/warnings/unused_signal=2
 gdscript/warnings/shadowed_variable=2
-gdscript/warnings/shadowed_variable_base_class=2
-gdscript/warnings/shadowed_global_identifier=2
 gdscript/warnings/unreachable_code=2
-gdscript/warnings/unreachable_pattern=2
 gdscript/warnings/standalone_expression=2
-gdscript/warnings/standalone_ternary=2
+gdscript/warnings/narrowing_conversion=2
 gdscript/warnings/incompatible_ternary=2
-gdscript/warnings/untyped_declaration=2
-gdscript/warnings/inferred_declaration=2
+gdscript/warnings/unused_signal=2
+gdscript/warnings/property_used_as_function=2
+gdscript/warnings/constant_used_as_function=2
+gdscript/warnings/function_used_as_property=2
 gdscript/warnings/unsafe_property_access=2
 gdscript/warnings/unsafe_method_access=2
 gdscript/warnings/unsafe_cast=2
 gdscript/warnings/unsafe_call_argument=2
+gdscript/warnings/deprecated_keyword=2
+gdscript/warnings/standalone_ternary=2
+gdscript/warnings/unused_local_constant=2
+gdscript/warnings/unused_private_class_variable=2
+gdscript/warnings/unused_parameter=2
+gdscript/warnings/shadowed_variable_base_class=2
+gdscript/warnings/shadowed_global_identifier=2
+gdscript/warnings/unreachable_pattern=2
+gdscript/warnings/untyped_declaration=2
+gdscript/warnings/inferred_declaration=2
 gdscript/warnings/unsafe_void_return=2
 gdscript/warnings/static_called_on_instance=2
 gdscript/warnings/redundant_static_unload=2
 gdscript/warnings/redundant_await=2
-gdscript/warnings/narrowing_conversion=2
 gdscript/warnings/int_as_enum_without_cast=2
 gdscript/warnings/int_as_enum_without_match=2
-gdscript/warnings/deprecated_keyword=2
 gdscript/warnings/confusable_identifier=2
 gdscript/warnings/confusable_local_declaration=2
 gdscript/warnings/confusable_local_usage=2
-gdscript/warnings/property_used_as_function=2
-gdscript/warnings/constant_used_as_function=2
-gdscript/warnings/function_used_as_property=2
 
 [display]
 
+window/stretch/mode="viewport"
 window/size/viewport_width=1080
 window/size/viewport_height=720
-window/stretch/mode="viewport"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/talo/plugin.cfg")
+enabled=PoolStringArray( "res://addons/AutoExportVersion/plugin.cfg", "res://addons/talo/plugin.cfg" )
 
 [rendering]
 

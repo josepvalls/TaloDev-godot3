@@ -1,6 +1,6 @@
 extends TaloLoadable
 
-@onready var character_body: CharacterBody2D = get_parent()
+@onready var character_body: KinematicBody2D = get_parent()
 
 var stars := 0
 var spawn_level := "starting_zone"

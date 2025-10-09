@@ -1,4 +1,4 @@
-class_name TaloAuthError extends RefCounted
+class_name TaloAuthError extends Reference
 
 enum ErrorCode {
 	API_ERROR,
@@ -28,5 +28,5 @@ func get_string() -> String:
 	return _error_string
 
 ## Get the player auth error code using the ErrorCode enum.
-func get_code() -> ErrorCode:
+func get_code():
 	return ErrorCode.get(_error_string)

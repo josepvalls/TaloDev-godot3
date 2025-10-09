@@ -1,4 +1,4 @@
-class_name TaloSocketError extends RefCounted
+class_name TaloSocketError extends Reference
 
 enum ErrorCode {
 	API_ERROR,
@@ -18,7 +18,7 @@ enum ErrorCode {
 var req: String
 
 ## The socket error code using the ErrorCode enum.
-var code: ErrorCode
+var code: int
 
 ## The human-readable socket error message. 
 var message: String

@@ -1,6 +1,6 @@
 extends Button
 
-@export var group_id: String
+export var group_id: String
 
 func _on_pressed() -> void:
 	if group_id.is_empty():
