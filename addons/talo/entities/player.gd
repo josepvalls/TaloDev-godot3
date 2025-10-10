@@ -1,20 +1,20 @@
-class_name TaloPlayer extends Reference
+class_name TaloPlayer extends Object #TaloEntityWithProps
 ## @tutorial: https://docs.trytalo.com/docs/godot/player-props
 
 var id: String
 var aliases: Array = []
 var groups: Array = []
-var props: Array = []
 var _offline_data: Dictionary
 
-#func _init():
-	#super._init([])
+func _init():
+	pass
+	#super._init(props)
 	#update_from_raw_data(data)
 
 ## Update the player from raw JSON data.
 func update_from_raw_data(data: Dictionary) -> void:
-	for prop_key in data.props:
-		props[prop_key] = TaloProp.new(prop_key, props[prop_key])
+	#for prop_key in data.props:
+	#	props[prop_key] = TaloProp.new(prop_key, props[prop_key])
 
 	id = data.id
 

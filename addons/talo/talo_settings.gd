@@ -14,6 +14,7 @@ const LIVE_FEATURE_TAG := "talo_live"
 var api_url = "https://api.trytalo.com"
 var access_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjcyNSwiYXBpIjp0cnVlLCJpYXQiOjE3NTk2ODQ0MjN9.nrACjV78qTHKkvM4pewVcM4EoV3Q0ksAZZMXfvLCgBQ"
 var offline_mode = false
+var handle_tree_quit = false
 
 func is_debug_build() -> bool:
 	if OS.has_feature(LIVE_FEATURE_TAG):

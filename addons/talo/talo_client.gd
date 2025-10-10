@@ -32,7 +32,9 @@ func _http_request_completed(result, status, headers, response_body, callbacks):
 		callback = callbacks.pop_front()
 	prints("_http_request_completed", status, callback.function if callback else "No callback")
 	var response_text = response_body.get_string_from_utf8()
-	var json_data = parse_json(response_text)
+	var json_data = {}
+	if response_text:
+		json_data = parse_json(response_text)
 
 	if result != HTTPRequest.RESULT_SUCCESS:
 		json_data["message"] = "Request failed: result %s, details: https://docs.godotengine.org/en/stable/classes/class_httprequest.html#enum-httprequest-result" % result

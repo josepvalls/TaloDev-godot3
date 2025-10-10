@@ -14,7 +14,7 @@ var current_player: String
 
 var settings: TaloSettings
 
-var players: PlayersAPI
+var players#: PlayersAPI # TODO resolve cyclyc references
 var events: EventsAPI
 var leaderboards: LeaderboardsAPI
 var health_check: HealthCheckAPI
@@ -23,15 +23,25 @@ func _ready() -> void:
 	_load_config()
 	_load_apis()
 
-	#get_tree().set_auto_accept_quit(false)
+	if Talo.settings.handle_tree_quit:
+		get_tree().set_auto_accept_quit(false)
 	pause_mode = Node.PAUSE_MODE_PROCESS
 	emit_signal("init_completed")
+	
+func _notification(what: int):
+	match what:
+		NOTIFICATION_WM_QUIT_REQUEST:
+			_do_flush()
+			if Talo.settings.handle_tree_quit:
+				get_tree().quit()
+		NOTIFICATION_WM_FOCUS_OUT:
+			_do_flush()
 	
 func _load_config() -> void:
 	settings = TaloSettings.new()
 
 func _load_apis() -> void:
-	players = preload("res://addons/talo/apis/players_api.gd").new()
+	players = load("res://addons/talo/apis/players_api.gd").new()  # TODO resolve cyclyc references
 	players.set_url("/v1/players")
 	events = preload("res://addons/talo/apis/events_api.gd").new()
 	events.set_url("/v1/events")
@@ -64,5 +74,4 @@ func is_offline() -> bool:
 
 func _do_flush() -> void:
 	if identity_check(false) == OK:
-		pass
-		#events.flush()
+		events.flush()

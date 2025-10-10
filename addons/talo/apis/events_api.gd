@@ -20,7 +20,6 @@ signal events_updated()
 func _get_game_version() -> String:
 	var version_script = preload(VERSION_SCRIPT_PATH)
 	return version_script.VERSION
-	#return ProjectSettings.get_setting("application/config/version")
 
 func _build_meta_props() -> Array:
 	return [
@@ -54,7 +53,6 @@ func flush() -> void:
 		var username = "unidentified"
 		Talo.players.identify("username", username, [funcref(self, "flush")])
 		return
-
 
 	if _lock_flushes:
 		_flush_attempted_during_lock = true
