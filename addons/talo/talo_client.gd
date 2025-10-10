@@ -64,10 +64,6 @@ func _build_headers(extra_headers: Array = []) -> Array:
 			"X-Talo-Alias: %s" % Talo.current_alias
 		])
 
-	var session_token = Talo.player_auth.session_manager.get_token()
-	if session_token:
-		headers.append("X-Talo-Session: %s" % session_token)
-
 	headers.append_array(extra_headers)
 
 	return headers

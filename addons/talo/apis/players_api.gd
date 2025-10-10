@@ -24,25 +24,61 @@ func _ready() -> void:
 func _handle_identify_success(alias, socket_token =  ""):
 	Talo.current_player = alias["player"]["id"]
 	Talo.current_alias = alias["id"]
+	
+func clear_identity():
+	Talo.current_player = ""
+	Talo.current_alias = ""
+	
 
 ## Identify a player using a service (e.g. "username") and identifier (e.g. "bob").
-func identify(service: String, identifier: String):
+func identify(service: String, identifier: String, callbacks=null):
 	emit_signal("identification_started")
-	client.make_request(HTTPClient.METHOD_GET, "/identify?service=%s&identifier=%s" % [service, identifier], {}, [], false, [funcref(self, "identify_callback")])
+	if not callbacks:
+		callbacks = []
+	callbacks.push_front(funcref(self, "identify_callback"))
+	client.make_request(HTTPClient.METHOD_GET, "/identify?service=%s&identifier=%s" % [service, identifier], {}, [], false, callbacks)
 
-func identify_callback(res):
+func identify_callback(res, callbacks=null):
 	prints("identify_callback", res.body)
+	var callback: FuncRef = null
+	if callbacks:
+		callback = callbacks.pop_front()
+
 	match res.status:
 		200:
 			var alias = res.body.alias
 			#alias.write_offline_alias()
 			_handle_identify_success(alias, res.body.socketToken)
+			if callback:
+				if callbacks:
+					callback.call_func(true, callbacks)
+				else:
+					callback.call_func()
+
 		_:
 			emit_signal("identification_failed")
 			emit_signal("identified", null)
+			if callback:
+				if callbacks:
+					callback.call_func(null, callbacks)
+				else:
+					callback.call_func()
 
 
-func update_callback(res):
+## Flush and sync the player's current data with Talo.
+func update(player_dict, callbacks=null):
+	if not callbacks:
+		callbacks = []
+	callbacks.push_front(funcref(self, "update_callback"))
+	if Talo.identity_check() != OK:
+		return false
+		
+	#var player_props_array = TaloEntityWithProps.from_dict(player_dict).get_serialized_props()
+	var player_props_array = TaloPropUtils.serialise_prop_array(TaloPropUtils.dictionary_to_prop_array(player_dict))
+
+	client.make_request(HTTPClient.METHOD_PATCH, "/%s" % Talo.current_player, { props = player_props_array }, [], false, callbacks)
+
+func update_callback(res, callbacks=null):
 	match res.status:
 		200:			
 			var p = TaloPlayer.new()
@@ -69,16 +105,3 @@ func generate_identifier() -> String:
 	var size := 12
 	var split_start := RandomNumberGenerator.new().randi_range(0, time_hash.length() - size)
 	return time_hash.substr(split_start, size)
-
-
-## Create a new socket token. The Talo socket will use this token to identify the player.
-func create_socket_token():
-	client.make_request(HTTPClient.METHOD_POST, "/socket-token", {}, [], false, funcref(self, "create_socket_token_callback"))
-func create_socket_token_callback(res):
-	match res.status:
-		200:
-			prints("res.body.socketToken", res.body.socketToken)
-			#Talo.socket.set_socket_token(res.body.socketToken)
-		_:
-			pass
-			#Talo.socket.set_socket_token("")

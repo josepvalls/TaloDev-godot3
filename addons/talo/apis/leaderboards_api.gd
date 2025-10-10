@@ -57,14 +57,15 @@ func get_entries_callback(res, callbacks):
 			if callback:
 				callback.call_func(null, callbacks)
 
-## Add an entry to a leaderboard. The props (key-value pairs) parameter is used to store additional data with the entry.
-func add_entry(internal_name: String, score: float, props: Dictionary = {}):
+## Add an entry to a leaderboard.
+func add_entry(internal_name: String, score: float, props_dict = {}):
 	#if Talo.identity_check() != OK:
 	#	return null
-
+	#var props_array = TaloEntityWithProps.from_dict(props_dict).get_serialized_props()
+	var props_array = TaloPropUtils.serialise_prop_array(TaloPropUtils.dictionary_to_prop_array(props_dict))
 	client.make_request(HTTPClient.METHOD_POST, "/%s/entries" % internal_name, {
 		score = score,
-		props = []
+		props = props_array
 	}, [], false, [funcref(self, "add_entry_callback")])
 
 signal add_entry_response(entry)

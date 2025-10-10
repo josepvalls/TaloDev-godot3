@@ -1,4 +1,4 @@
-class_name TaloProp extends Reference
+class_name TaloProp extends Object
 
 var key: String
 var value

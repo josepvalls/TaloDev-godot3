@@ -7,12 +7,15 @@ class_name EventsAPI extends TaloAPI
 
 var _queue := []
 var _min_queue_size := 10
+var _max_queue_size := 1000
 
 var _events_to_flush := []
 var _lock_flushes := false
 var _flush_attempted_during_lock := false
 
 const VERSION_SCRIPT_PATH = "res://version.gd"
+
+signal events_updated()
 
 func _get_game_version() -> String:
 	var version_script = preload(VERSION_SCRIPT_PATH)
@@ -25,9 +28,6 @@ func _build_meta_props() -> Array:
 		TaloProp.new("META_GAME_VERSION", _get_game_version()),
 	]
 
-func _has_errors(errors: Array) -> bool:
-	return len(errors)>0
-
 ## Track an event with optional props (key-value pairs) and add it to the queue of events ready to be sent to the backend. If the queue reaches the minimum size, it will be flushed.
 func track(name: String, props: Dictionary = {}) -> void:
 	var final_props := _build_meta_props()
@@ -38,6 +38,8 @@ func track(name: String, props: Dictionary = {}) -> void:
 		props = TaloPropUtils.serialise_prop_array(final_props),
 		timestamp = TaloTimeUtils.get_timestamp_msec()
 	})
+	
+	emit_signal("events_updated")
 
 	if _queue.size() >= _min_queue_size:
 		flush()
@@ -46,6 +48,13 @@ func track(name: String, props: Dictionary = {}) -> void:
 func flush() -> void:
 	if _queue.size() == 0:
 		return
+		
+	if not Talo.has_identity():
+		prints("player needs to be identified")
+		var username = "unidentified"
+		Talo.players.identify("username", username, [funcref(self, "flush")])
+		return
+
 
 	if _lock_flushes:
 		_flush_attempted_during_lock = true
@@ -55,17 +64,20 @@ func flush() -> void:
 	_events_to_flush.append_array(_queue)
 	_queue.clear()
 
-	client.make_request(HTTPClient.METHOD_POST, "/", { events = _events_to_flush }, [], false, funcref(self, "flush_callback"))
+	client.make_request(HTTPClient.METHOD_POST, "/", { events = _events_to_flush }, [], false, [funcref(self, "flush_callback")])
 
 func flush_callback(res):
-	_events_to_flush.clear()
 	_lock_flushes = false
 
 	match res.status:
 		200:
-			if _has_errors(res.body.errors):
-				printerr("Failed to flush events:")
-				printerr(res.body.errors)
+			pass
+		_:
+			# enqueue events to be flushed again
+			_queue.append_array(_events_to_flush)
+		
+	_events_to_flush.clear()
+	emit_signal("events_updated")
 
 	if _flush_attempted_during_lock:
 		_flush_attempted_during_lock = false

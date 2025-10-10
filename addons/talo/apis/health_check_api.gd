@@ -15,7 +15,7 @@ var _last_health_check_status = HealthCheckStatus.UNKNOWN
 
 ## Ping the Talo Health Check API to check if Talo can be reached.
 func ping():
-	client.make_request(HTTPClient.METHOD_GET, "", {}, [], false, funcref(self, "ping_callback"))
+	client.make_request(HTTPClient.METHOD_GET, "", {}, [], false, [funcref(self, "ping_callback")])
 func ping_callback(res):
 	var success := true if res.status == 204 else false
 	var failed_last_health_check := true if _last_health_check_status == HealthCheckStatus.FAILED else false

@@ -4,6 +4,10 @@ var props: Array = []
 
 func _init(props: Array) -> void:
 	self.props = props
+	
+static func from_dict(dict):
+	return TaloEntityWithProps.new(TaloPropUtils.dictionary_to_prop_array(dict))
+	
 
 ## Get a property value by key. Returns the fallback value if the key is not found.
 func get_prop(key: String, fallback =  "") -> String:
