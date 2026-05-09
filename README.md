@@ -1,6 +1,6 @@
-# Talo Godot plugin: self-hostable game dev tools
+# Talo for Godot 3
 
-This is a Godot 3 backport of the [Talo Godot plugin](https://github.com/TaloDev/godot).
+This is a work-in-progress Godot 3 backport of the [Talo Godot plugin](https://github.com/TaloDev/godot).
 
 This fork lacks many features and is still under development. It was developed to support our winning game jam project [Haiku Hike](https://josepvalls.itch.io/haikuhike)
 
