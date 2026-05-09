@@ -42,6 +42,7 @@ func get_entries(internal_name: String, callback=null, options := GetEntriesOpti
 	client.make_request(HTTPClient.METHOD_GET, url % url_data, {}, [], false, [funcref(self, "get_entries_callback"), callback])
 
 signal entries_response(entries)
+
 func get_entries_callback(res, callbacks):
 	var callback = null
 	if callbacks:
@@ -49,7 +50,7 @@ func get_entries_callback(res, callbacks):
 	match res.status:
 		200:
 			cached_entries = res.body.entries
-			emit_signal("entries_response", res.body.entries)
+			emit_signal("entries_response", res)
 			if callback:
 				callback.call_func(res, callbacks)
 		_:
@@ -80,7 +81,7 @@ func add_entry_callback(res):
 class GetEntriesOptions:
 	var page =  0
 	var alias_id =  -1
-	var include_archived =  false
+	var include_archived = false
 	var prop_key =  ""
 	var prop_value =  ""
 	var start_date =  ""

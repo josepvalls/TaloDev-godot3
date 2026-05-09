@@ -12,7 +12,7 @@ signal connection_restored()
 var current_alias: String
 var current_player: String
 
-var settings: TaloSettings
+var settings: TaloSettings = TaloSettings.new()
 
 var players#: PlayersAPI # TODO resolve cyclyc references
 var events: EventsAPI
@@ -20,25 +20,23 @@ var leaderboards: LeaderboardsAPI
 var health_check: HealthCheckAPI
 
 func _ready() -> void:
-	_load_config()
-	_load_apis()
-
-	if Talo.settings.handle_tree_quit:
-		get_tree().set_auto_accept_quit(false)
+	_load_apis()	
 	pause_mode = Node.PAUSE_MODE_PROCESS
-	emit_signal("init_completed")
 	
 func _notification(what: int):
 	match what:
 		NOTIFICATION_WM_QUIT_REQUEST:
 			_do_flush()
 			if Talo.settings.handle_tree_quit:
+				yield(get_tree().create_timer(0.1), "timeout")
 				get_tree().quit()
 		NOTIFICATION_WM_FOCUS_OUT:
 			_do_flush()
-	
-func _load_config() -> void:
-	settings = TaloSettings.new()
+
+func init() -> void:
+	if Talo.settings.handle_tree_quit:
+		get_tree().set_auto_accept_quit(false)
+	emit_signal("init_completed")
 
 func _load_apis() -> void:
 	players = load("res://addons/talo/apis/players_api.gd").new()  # TODO resolve cyclyc references
@@ -75,3 +73,5 @@ func is_offline() -> bool:
 func _do_flush() -> void:
 	if identity_check(false) == OK:
 		events.flush()
+	else:
+		players.identify("username", GameServices.user_data.user_name, [funcref(events, "flush")])

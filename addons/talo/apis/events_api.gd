@@ -49,7 +49,7 @@ func flush() -> void:
 		return
 		
 	if not Talo.has_identity():
-		prints("player needs to be identified")
+		prints("Talo player needs to be identified, using unidentified key")
 		var username = "unidentified"
 		Talo.players.identify("username", username, [funcref(self, "flush")])
 		return
