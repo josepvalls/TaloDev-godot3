@@ -99,6 +99,7 @@ config/features=PoolStringArray( "4.4", "Forward Plus" )
 
 [autoload]
 
+GameServices="*res://scripts/GameServices.gd"
 Talo="*res://addons/talo/talo_manager.gd"
 
 [debug]
